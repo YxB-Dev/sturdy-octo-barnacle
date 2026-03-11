@@ -55,7 +55,7 @@ We use `uv` for lightning-fast Python environment management.
 1.  **Install `uv`**:
     If you haven't installed `uv` yet, run:
     ```bash
-    curl -LsSf https://astral-sh.uv.io/install.sh | sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh
     ```
     *(Restart your terminal after installation)*
 
