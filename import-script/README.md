@@ -34,7 +34,6 @@ Ensure the following files are present and correctly configured in the project r
     SNOWFLAKE_ORGANIZATION=your-org
     SNOWFLAKE_USER=your-user
     SNOWFLAKE_PASSWORD=your-password
-    SNOWFLAKE_ROLE=ACCOUNTADMIN
     ```
 
 ### Initialize Terraform

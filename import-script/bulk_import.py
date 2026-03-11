@@ -200,8 +200,22 @@ def main():
         project_root = here
 
     os.chdir(project_root)
-    load_dotenv(os.path.join(project_root, ".env"))
+    env_path = os.path.join(project_root, ".env")
+    if not os.path.exists(env_path):
+        print(f"Error: .env file not found at {env_path}")
+        print("Please create a .env file with the required Snowflake credentials.")
+        return
+
+    load_dotenv(env_path)
     
+    required_env_vars = ["SNOWFLAKE_ACCOUNT", "SNOWFLAKE_USER", "SNOWFLAKE_PASSWORD"]
+    missing_vars = [var for var in required_env_vars if not os.environ.get(var)]
+    
+    if missing_vars:
+        print(f"Error: Missing required environment variables: {', '.join(missing_vars)}")
+        print("Please check your .env file.")
+        return
+
     account = os.environ.get("SNOWFLAKE_ACCOUNT")
     organization = os.environ.get("SNOWFLAKE_ORGANIZATION")
     user = os.environ.get("SNOWFLAKE_USER")
