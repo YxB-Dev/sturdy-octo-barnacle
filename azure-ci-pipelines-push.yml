@@ -1,0 +1,40 @@
+# Azure DevOps Pipeline to upload statefile
+
+trigger:
+  branches:
+    include:
+      - file-upload
+
+variables:
+  - group: snowflake-credentials
+  
+  - name: terraformVersion
+    value: '1.14.6'
+
+stages:
+  - stage: file_upload
+    displayName: 'File Upload'
+    jobs:
+      - job: file_upload
+        displayName: 'Run File Upload'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+            persistCredentials: true
+
+          - task: AzureCLI@2
+            displayName: 'Azure Login (OIDC) and Upload state file'
+            inputs:
+              azureSubscription: '$(azureServiceConnection)'
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                echo "Authenticated via OIDC"
+                az account show
+                az storage blob upload --container-name $(TF_STATE_CONTAINER) --name terraform.tfstate --file terraform.tfstate --account-name $(TF_STATE_STORAGE)
+                az storage blob list --container-name $(TF_STATE_CONTAINER) --account-name $(TF_STATE_STORAGE) --output table
+            env:
+              ARM_USE_OIDC: true
+              ARM_USE_AZUREAD: true
+
