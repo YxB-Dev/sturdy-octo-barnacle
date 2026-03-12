@@ -11,6 +11,15 @@ variables:
   - name: terraformVersion
     value: '1.14.6'
 
+  - name: azureServiceConnection
+    value: 'tf-ci/cd'
+  
+  - name: ARM_USE_OIDC
+    value: true
+  - name: ARM_USE_AZUREAD
+    value: true
+
+
 stages:
   - stage: file_upload
     displayName: 'File Upload'
@@ -32,8 +41,8 @@ stages:
               inlineScript: |
                 echo "Authenticated via OIDC"
                 az account show
-                az storage blob upload --container-name $(TF_STATE_CONTAINER) --name terraform.tfstate --file terraform.tfstate --account-name $(TF_STATE_STORAGE)
-                az storage blob list --container-name $(TF_STATE_CONTAINER) --account-name $(TF_STATE_STORAGE) --output table
+                az storage blob upload --container-name $(TF_STATE_CONTAINER) --name terraform.tfstate --file terraform.tfstate --account-name $(TF_STATE_STORAGE) --auth-mode login
+                az storage blob list --container-name $(TF_STATE_CONTAINER) --account-name $(TF_STATE_STORAGE) --output table --auth-mode login
             env:
               ARM_USE_OIDC: true
               ARM_USE_AZUREAD: true
